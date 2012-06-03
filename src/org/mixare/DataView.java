@@ -102,6 +102,8 @@ public class DataView {
 	 * Constructor
 	 */
 	public DataView(MixContext ctx) {
+		Throwable debug = new Throwable();
+		Log.i("DataView", "created",debug);
 		this.mixContext = ctx;
 	}
 

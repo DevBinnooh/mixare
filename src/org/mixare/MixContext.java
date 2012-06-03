@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -61,7 +62,8 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
 	public MixContext(MixView appCtx) {
 		super(appCtx);
-		mixView = appCtx;
+		Log.i(TAG+" MixContext", "Created");
+		mixView = appCtx; //already stored, in app Context!
 
 		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
@@ -98,6 +100,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	public void doResume(MixView mixView) {
+		Log.i(TAG+" MixContext", "onResume Called!!");
 		setActualMixView(mixView);
 	}
 

@@ -14,6 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.CheckBox;
 
 /**
@@ -94,6 +95,7 @@ public class MainActivity extends Activity {
 					PackageManager.GET_RESOLVED_FILTER);
 			
 			if(list.size() > 0){
+				Log.i("Mixare - MainActivity", "Plugin are Available");
 				return true;
 			}
 		}

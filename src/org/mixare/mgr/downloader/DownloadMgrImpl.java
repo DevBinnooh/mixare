@@ -46,6 +46,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 		if (ctx == null) {
 			throw new IllegalArgumentException("Mix Context IS NULL");
 		}
+		Log.i("DownloadMgrImpl", "Created");
 		this.ctx = ctx;
 		state=DownloadManagerState.OffLine;
 	}
@@ -59,6 +60,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 		ManagedDownloadRequest mRequest;
 		DownloadResult result;
 		stop = false;
+		Log.i("DownloadMgrImpl", "About to start Running");
 		while (!stop) {
 			state=DownloadManagerState.OnLine;
 			// Wait for proceed
@@ -192,6 +194,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 	public void switchOn() {
 		if (DownloadManagerState.OffLine.equals(getState())){
 		    executor.execute(this);
+		    Log.i("DownloadMgrImpl", "offline executed");
 		}else{
 			Log.i(MixView.TAG, "DownloadManager already started");
 		}

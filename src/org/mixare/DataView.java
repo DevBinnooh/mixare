@@ -99,56 +99,106 @@ public class DataView {
 
 	/**
 	 * Constructor
+	 * @param ctx {@link MixContext MixContext}
 	 */
 	public DataView(MixContext ctx) {
 		this.mixContext = ctx;
 	}
 
+	/**
+	 * Returns the current application (Mixare) context
+	 * @return MixContext app context
+	 */
 	public MixContext getContext() {
 		return mixContext;
 	}
 
+	/**
+	 * Return the state of available data, is their datasources (launched).
+	 * By default it's true, since Mixare comes with built in datasources
+	 * @return boolean true if data has been requested, false otherwise
+	 */
 	public boolean getIsLauncherStarted() {
 		return isLauncherStarted;
 	}
 
+	/**
+	 * Checks if the view is Frozen
+	 * @return frozen boolean true if screen is frozen, false otherwise
+	 */
 	public boolean isFrozen() {
 		return frozen;
 	}
 
+	/**
+	 * Sets view state 
+	 * @param frozen boolean true to set frozen, false to activate view
+	 */
 	public void setFrozen(final boolean frozen) {
 		this.frozen = frozen;
 	}
 
+	/**
+	 * Returns current view radius
+	 * @return radius float number of current radius
+	 */
 	public float getRadius() {
 		return radius;
 	}
 
+	/**
+	 * Sets View Radius
+	 * @param radius float radius to be set
+	 */
 	public void setRadius(final float radius) {
 		this.radius = radius;
 	}
 
+	/**
+	 * Returns {@link DataHandler DataHandler}
+	 * @return dataHandler data class
+	 */
 	public DataHandler getDataHandler() {
 		return dataHandler;
 	}
 
+	/**
+	 * TODO doc DataView
+	 * @return
+	 */
 	public boolean isDetailsView() {
 		return state.isDetailsView();
 	}
 
+	/**
+	 * TODO doc DataView
+	 * @param detailsView boolean
+	 */
 	public void setDetailsView(boolean detailsView) {
 		state.setDetailsView(detailsView);
 	}
 
+	/**
+	 * Start processing data, and sets locationFinder (TODO validate Setting location finder)
+	 */
 	public void doStart() {
 		state.nextLStatus = MixState.NOT_STARTED;
 		mixContext.getLocationFinder().setLocationAtLastDownload(curFix);
 	}
 
+	/**
+	 * Checks if the view has been initialized and ready to proceed
+	 * @return isInit boolean true if view initialized, false otherwise
+	 */
 	public boolean isInited() {
 		return isInit;
 	}
 
+	/**
+	 * Initialize view base on given width and height params.
+	 * @param widthInit int camera view width
+	 * @param heightInit int camera view height
+	 */
 	public void init(final int widthInit, final int heightInit) {
 		try {
 			width = widthInit;
@@ -171,6 +221,11 @@ public class DataView {
 		isInit = true;
 	}
 
+	/**
+	 * Request Data base on string URL
+	 * TODO fix dataView#requestData Logic
+	 * @param url to be requested
+	 */
 	public void requestData(String url) {
 		DownloadRequest request = new DownloadRequest(new DataSource(
 				"LAUNCHER", url, DataSource.TYPE.MIXARE,
@@ -191,6 +246,11 @@ public class DataView {
 //		state.nextLStatus = MixState.PROCESSING;
 //	}
 
+	/**
+	 * This the main data drawing function
+	 * TODO Doc {@link DataView#draw(PaintScreen)}
+	 * @param dw PaintScreen 
+	 */
 	public void draw(PaintScreen dw) {
 		mixContext.getRM(cam.transform);
 		curFix = mixContext.getLocationFinder().getCurrentLocation();
@@ -329,7 +389,7 @@ public class DataView {
 
 	/**
 	 * Handles drawing radar and direction.
-	 * @param PaintScreen screen that radar will be drawn to
+	 * @param dw PaintScreen screen that radar will be drawn to
 	 */
 	private void drawRadar(PaintScreen dw) {
 		String dirTxt = "";

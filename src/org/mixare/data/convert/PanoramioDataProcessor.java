@@ -50,8 +50,8 @@ import android.util.Log;
  * Panoramio API - Terms of Use for detailed requirements
  * </b>
  * 
- * @see http://www.panoramio.com/api/data/api.html
- * @author devBinnooh
+ * @see <a href="http://www.panoramio.com/api/data/api.html">Panoramio API</a>
+ * @author DevBinnooh
  *
  */
 public class PanoramioDataProcessor extends DataHandler implements DataProcessor{
@@ -113,9 +113,9 @@ public class PanoramioDataProcessor extends DataHandler implements DataProcessor
 	 *  }, ...
 	 *  </pre>
 	 *  
-	 * @param String rawData 
-	 * @param int taskId
-	 * @param int color
+	 * @param rawData 
+	 * @param taskId
+	 * @param color
 	 * @return List<Marker> List of Markers
 	 */
 	@Override

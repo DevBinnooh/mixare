@@ -84,6 +84,11 @@ public class Compatibility {
 		return retList;
 	}
 
+	/**
+	 * Gets current Activity rotation 
+	 * @param activity
+	 * @return int the rotation of the screen from its "natural" orientation
+	 */
 	static public int getRotation(final Activity activity) {
 		int result = 1;
 		try {

@@ -42,28 +42,28 @@ public interface DownloadManager {
 	/**
 	 * Submit new DownloadRequest
 	 * 
-	 * @param job
-	 * @return reference Of Job or null if job is rejected
+	 * @param job download request
+	 * @return String reference Of Job or null if job is rejected
 	 */
 	String submitJob(DownloadRequest job);
 
 	/**
 	 * Get result of job if exist, null otherwise
 	 * 
-	 * @param jobId reference of Job
-	 * @return result 
+	 * @param String jobId reference of Job
+	 * @return DownloadResult {@link DownloadResult result} 
 	 */
 	DownloadResult getReqResult(String jobId);
 
 	/**
 	 * Pseudo Iterator on results 
-	 * @return actual Download Result
+	 * @return DownloadResult next in queue {@link DownloadResult result}
 	 */
 	DownloadResult getNextResult();
 
 	/**
 	 * Gets the number of downloaded results
-	 * @return the number of results
+	 * @return int the number of results
 	 */
 	int getResultSize();
 	
@@ -86,7 +86,7 @@ public interface DownloadManager {
 
 	/**
 	 * Request state of service
-	 * @return
+	 * @return DownloadManagerState enum class of DownloadManager current state
 	 */
 	DownloadManagerState getState();
 	

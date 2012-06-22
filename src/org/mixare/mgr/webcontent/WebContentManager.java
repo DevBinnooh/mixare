@@ -36,10 +36,9 @@ public interface WebContentManager {
 	 * the webview This method searches for possible intents that can be used
 	 * instead. I.E. a mp3 file can be forwarded to a mediaplayer.
 	 * 
-	 * @param url
-	 *            the url to process
-	 * @param view
-	 * @return
+	 * @param String url the url to process
+	 * @param Context view
+	 * @return boolean 
 	 */
 	boolean processUrl(String url, Context ctx);
 

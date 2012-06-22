@@ -40,8 +40,6 @@ public interface LocationFinder {
 
 	/**
 	 * Finds the location through the providers  
-	 * @param ctx
-	 * @return
 	 */
 	void findLocation();
 
@@ -59,7 +57,7 @@ public interface LocationFinder {
 	/**
 	 * Gets the location that was used in the last download for
 	 * datasources.
-	 * @return
+	 * @return  Object Location
 	 */
 	Location getLocationAtLastDownload();
 
@@ -71,7 +69,7 @@ public interface LocationFinder {
 	/**
 	 * Set the DownloadManager manager at this service
 	 * 
-	 * @param downloadManager
+	 * @param downloadManager to be set
 	 */
 	void setDownloadManager(DownloadManager downloadManager);
 
@@ -88,13 +86,13 @@ public interface LocationFinder {
 	/**
 	 * Status of service
 	 * 
-	 * @return
+	 * @return LocationFinderState enum class location state
 	 */
 	LocationFinderState getStatus();
 
 	/**
 	 * 
-	 * @return GeomagneticField
+	 * @return GeomagneticField GeomagneticField
 	 */
 	GeomagneticField getGeomagneticField();
 

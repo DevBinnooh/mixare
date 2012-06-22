@@ -93,7 +93,7 @@ public class MixMap extends MapActivity implements OnTouchListener{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataView = MixView.getDataView();
 		//setMixContext(dataView.getContext());//Dead cycle hear (MixContext should not only rely on MixView

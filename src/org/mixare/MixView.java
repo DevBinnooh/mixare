@@ -18,7 +18,7 @@
  */
 package org.mixare;
 
-import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
+//import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -332,9 +332,9 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 			}//else report error (unsupported hardware)
 
 			getMixViewData().getSensorMgr().registerListener(this,
-					getMixViewData().getSensorGrav(), SENSOR_DELAY_GAME);
+					getMixViewData().getSensorGrav(), android.hardware.SensorManager.SENSOR_DELAY_GAME);
 			getMixViewData().getSensorMgr().registerListener(this,
-					getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
+					getMixViewData().getSensorMag(), android.hardware.SensorManager.SENSOR_DELAY_GAME);
 
 			try {
 				GeomagneticField gmf = getMixViewData().getMixContext().getLocationFinder().getGeomagneticField(); 

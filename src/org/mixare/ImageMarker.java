@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 
+ * Copyright (C) 2012 DevBinnooh <http://www.binnooh.com>
  * 
  * This file is part of mixare.
  * 
@@ -41,7 +41,7 @@ import android.util.Log;
  * Note: LinkURL is the url when marker is clicked on.
  * Note: ImageURL is the url that links to solid image.
  * 
- * @author devBinnooh
+ * @author DevBinnooh <http://www.binnooh.com>
  * @author A.Egal
  */
 public class ImageMarker extends LocalMarker {
@@ -58,14 +58,14 @@ public class ImageMarker extends LocalMarker {
 	 * or Call this class with Image URL.
 	 * 
 	 * @see org.mixare.ImageMarker#ImageMarker(String, String, double, double, double, String, int, int, String, String)
-	 * @param String Marker's id
-	 * @param String Marker's title
-	 * @param double latitude
-	 * @param double longitude
-	 * @param double altitude
-	 * @param String link
-	 * @param int Datasource type
-	 * @param int Color int representation {@link android.graphics.Color Color}
+	 * @param id String Marker's id
+	 * @param title String Marker's title
+	 * @param latitude double latitude
+	 * @param longitude double longitude
+	 * @param altitude double altitude
+	 * @param link String link
+	 * @param type int Datasource type
+	 * @param Color int Color representation {@link android.graphics.Color Color}
 	 */
 	public ImageMarker(String id, String title, double latitude,
 			double longitude, double altitude, String link, int type, int colour) {
@@ -78,16 +78,16 @@ public class ImageMarker extends LocalMarker {
 	 * Marker will handle retrieving the image from Image URL,
 	 * Please ensure that it links to an Image.
 	 * 
-	 * @param String Marker's id
-	 * @param String Marker's title
-	 * @param double latitude
-	 * @param double longitude
-	 * @param double altitude
-	 * @param String link
-	 * @param int Datasource type
-	 * @param int Color int representation {@link android.graphics.Color Color}
-	 * @param String ImageOwner's name
-	 * @param String Image's url
+	 * @param id String Marker's id
+	 * @param title String Marker's title
+	 * @param latitude double latitude
+	 * @param longitude double longitude
+	 * @param altitude double altitude
+	 * @param link String link when clicked
+	 * @param type int Datasource type
+	 * @param Color int Color representation {@link android.graphics.Color Color}
+	 * @param name String ImageOwner's name
+	 * @param url String Image's url
 	 */
 	public ImageMarker (String id, String title, double latitude,
 			double longitude, double altitude, final String pageLink, 
@@ -125,7 +125,7 @@ public class ImageMarker extends LocalMarker {
 	 * than 10 chars, otherwise, it displays the first 10 chars and concatenate
 	 * three dots "..."
 	 * 
-	 * @param PaintScreen View Screen that title screen will be drawn into
+	 * @param dw PaintScreen View Screen that title screen will be drawn into
 	 */
 	public void drawTitle(final PaintScreen dw) {
 		if (isVisible) {
@@ -146,7 +146,7 @@ public class ImageMarker extends LocalMarker {
 	
 	/**
 	 * Handles Drawing Images
-	 * @param PaintScreen Screen that Image will be drawn into
+	 * @param dw PaintScreen Screen that Image will be drawn into
 	 */
 	public void drawImage(final PaintScreen dw) {
 		final DrawImage Image = new DrawImage(isVisible, cMarker, image);
@@ -154,24 +154,23 @@ public class ImageMarker extends LocalMarker {
 	}
 	
 
-	private MixVector getSignMarker() {
-		return this.signMarker;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getMaxObjects() {
 		return maxObjects;
 	}
 
 	/**
-	 * @return Bitmap image
+	 * @return image Bitmap image
 	 */
 	public Bitmap getImage() {
 		return image;
 	}
 
 	/**
-	 * @param Bitmap the image to set
+	 * @param image Bitmap the image to set
 	 */
 	public void setImage(Bitmap image) {
 		this.image = image;

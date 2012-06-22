@@ -87,51 +87,34 @@ public class POIMarker extends LocalMarker {
 		}
 	}
 
-	@Override
-	public void drawTextBlock(PaintScreen dw) {
-		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
-		// TODO: change textblock only when distance changes
-
-		String textStr = "";
-
-		double d = distance;
-		DecimalFormat df = new DecimalFormat("@#");
-		if (d < 1000.0) {
-			textStr = getTitle() + " (" + df.format(d) + "m)";
-		} else {
-			d = d / 1000.0;
-			textStr = getTitle() + " (" + df.format(d) + "km)";
-		}
-
-		textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1, 250,
-				dw, isUnderline());
-
+	/**
+	 * Draw a title for POIMarker. It displays full title if title's length is less
+	 * than <b>15</b> chars, otherwise, it displays the first 10 chars and concatenate
+	 * three dots "..."
+	 * 
+	 * @param dw PaintScreen View Screen that title screen will be drawn into
+	 */
+	public void drawTitle(PaintScreen dw) {
 		if (isVisible) {
-			// based on the distance set the colour
-			if (distance < 100.0) {
-				textBlock.setBgColor(Color.argb(128, 52, 52, 52));
-				textBlock.setBorderColor(Color.rgb(255, 104, 91));
-			} else {
-				textBlock.setBgColor(Color.argb(128, 0, 0, 0));
-				textBlock.setBorderColor(Color.rgb(255, 255, 255));
-			}
-			//dw.setColor(DataSource.getColor(type));
-
-			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
-					signMarker.x, signMarker.y);
+			final float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+			String textStr = MixUtils.shortenTitle(title,distance,15);
+			textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1, 250,
+					dw, underline);
+			 dw.setColor(this.getColour());
+			final float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
+					getSignMarker().x, getSignMarker().y);
 			txtLab.prepare(textBlock);
 			dw.setStrokeWidth(1f);
 			dw.setFill(true);
-			dw.paintObj(txtLab, signMarker.x - txtLab.getWidth() / 2,
-					signMarker.y + maxHeight, currentAngle + 90, 1);
-
+			dw.paintObj(txtLab, getSignMarker().x - txtLab.getWidth() / 2,
+					getSignMarker().y + maxHeight, currentAngle + 90, 1);
 		}
 	}
 
 	public void otherShape(PaintScreen dw) {
 		// This is to draw new shape, triangle
 		float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
-				signMarker.x, signMarker.y);
+				getSignMarker().x, getSignMarker().y);
 		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 
 		dw.setColor(getColour());
@@ -149,6 +132,13 @@ public class POIMarker extends LocalMarker {
 		tri.close();
 		dw.paintPath(tri, cMarker.x, cMarker.y, radius * 2, radius * 2,
 				currentAngle + 90, 1);
+	}
+
+	@Override
+	public void draw(PaintScreen dw) {
+		drawCircle(dw);
+		drawTitle(dw);
+		
 	}
 
 }

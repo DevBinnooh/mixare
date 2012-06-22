@@ -19,7 +19,9 @@
 
 package org.mixare;
 
+import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
+import org.mixare.lib.gui.TextObj;
 
 import android.location.Location;
 
@@ -58,10 +60,11 @@ public class SocialMarker extends LocalMarker {
 
 	@Override
 	public void draw(PaintScreen dw) {
-
-		drawTextBlock(dw);
+		//This is The Ghost marker
+		//drawTitle(dw);
 
 		if (isVisible) {
+			drawTitle(dw);
 			float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 			//Bitmap bitmap = BitmapFactory.decodeResource(MixContext.getResources(), DataSource.getDataSourceIcon());
 //			if(bitmap!=null) {
@@ -76,6 +79,29 @@ public class SocialMarker extends LocalMarker {
 		}
 	}
 
+	/**
+	 * Draw a title for SocialMarker. It displays full title if title's length is less
+	 * than <b>20</b> chars, otherwise, it displays the first 10 chars and concatenate
+	 * three dots "..."
+	 * 
+	 * @param dw PaintScreen View Screen that title screen will be drawn into
+	 */
+	public void drawTitle(final PaintScreen dw) {
+		if (isVisible) {
+			final float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+			String textStr = MixUtils.shortenTitle(title,distance,20);
+			textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1, 250,
+					dw, underline);
+			 dw.setColor(this.getColour());
+			final float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
+					getSignMarker().x, getSignMarker().y);
+			txtLab.prepare(textBlock);
+			dw.setStrokeWidth(1f);
+			dw.setFill(true);
+			dw.paintObj(txtLab, getSignMarker().x - txtLab.getWidth() / 2,
+					getSignMarker().y + maxHeight, currentAngle + 90, 1);
+		}
+	}
 	@Override
 	public int getMaxObjects() {
 		return MAX_OBJECTS;

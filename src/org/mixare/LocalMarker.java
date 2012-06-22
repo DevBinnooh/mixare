@@ -44,43 +44,70 @@ import android.location.Location;
  * All markers are specific markers like SocialMarkers or
  * NavigationMarkers, since this class is abstract
  */
-
 public abstract class LocalMarker implements Marker {
 
 	private String ID;
+	/** Marker's title to be shown */
 	protected String title;
+	/** Boolean if title link to http page */
 	protected boolean underline = false;
 	private String URL;
 	protected PhysicalPlace mGeoLoc;
-	/* distance from user to mGeoLoc in meters */
+	/** distance from user to mGeoLoc in meters */
 	protected double distance;
-	/* Marker's color */
+	/** Marker's color */
 	private int colour;
 	
 	private boolean active;
 
 	// Draw properties
-	/* Marker's Visibility to user */
+	/** Marker's Visibility to user */
 	protected boolean isVisible;
 //	private boolean isLookingAt;
 //	private boolean isNear;
 //	private float deltaCenter;
+	/** Current Marker view position */
 	public MixVector cMarker = new MixVector();
 	
-	protected MixVector signMarker = new MixVector();
+	/** projected Marker position SignMarker */
+	private MixVector signMarker = new MixVector();
 
+	/** Marker location */
 	protected MixVector locationVector = new MixVector();
 	
+	/** Origin view points 
+	 * @deprecated please don't use this
+	 */
 	private MixVector origin = new MixVector(0, 0, 0);
 	
+	/** @deprecated Please don't use this vector, Scope has been lowered */
 	private MixVector upV = new MixVector(0, 1, 0);
 	
+	/** @deprecated Please don't use this, Scope has been lowered */
 	private ScreenLine pPt = new ScreenLine();
 
+	/** Title Label, can be override to set final touches on setting the title 
+	 * TODO {@link LocalMarker#txtLab txtLabel} localize scope
+	 */ 
 	public Label txtLab = new Label();
 	
+	/** Title Box, can be override to set final touches on setting the title 
+	 * TODO {@link LocalMarker#textBlock textBlock} localize scope
+	 */ 
 	protected TextObj textBlock;
 
+	/**
+	 * LocalMarker - Constructor
+	 * Sub-Classes <b>need to call this constructor</b>
+	 * @param id String marker's id (will be reset to id+type+title) {@link #getID() use for reference}
+	 * @param title String marker's title
+	 * @param latitude double marker's latitude
+	 * @param longitude double marker's longitude
+	 * @param altitude double marker's altitude (optional)
+	 * @param link String link page when marker clicked
+	 * @param type int {@link org.mixare.data.DataSource#TYPE data source type}
+	 * @param colour int Color representation {@link android.graphics.Color Color}
+	 */
 	public LocalMarker(final String id,  String title, final double latitude,
 			 double longitude, final double altitude,final String link,
 			int type, final int colour) {
@@ -98,11 +125,19 @@ public abstract class LocalMarker implements Marker {
 	}
 
 
-	private void cCMarker(MixVector originalPoint, Camera viewCam, float addX, float addY) {
+	/**
+	 * Computes rotation and marker's new position 
+	 * TODO remove {@link LocalMarker#cCMarker(MixVector, Camera, float, float) originalPoints} to local scope
+	 * @param originalPoint (0,0,0)
+	 * @param viewCam {@link Camera camera} class
+	 * @param addX float x position to be moved to
+	 * @param addY float y position to be moved to
+	 */
+	private void cCMarker(MixVector originalPoint, Camera viewCam, final float addX, final float addY) {
 
 		// Temp properties
 		final MixVector tmpa = new MixVector(originalPoint);
-		final MixVector tmpc = new MixVector(upV);
+		final MixVector tmpc = new MixVector(0,1,0);
 		tmpa.add(locationVector); //3 
 		tmpc.add(locationVector); //3
 		tmpa.sub(viewCam.lco); //4
@@ -114,7 +149,7 @@ public abstract class LocalMarker implements Marker {
 		viewCam.projectPoint(tmpa, tmpb, addX, addY); //6
 		cMarker.set(tmpb); //7
 		viewCam.projectPoint(tmpc, tmpb, addX, addY); //6
-		signMarker.set(tmpb); //7
+		getSignMarker().set(tmpb); //7
 	}
 
 	/**
@@ -131,6 +166,9 @@ public abstract class LocalMarker implements Marker {
 		}
 	}
 
+	/**
+	 * Updates marker's based on the current location
+	 */
 	public void update(Location curGPSFix) {
 		// An elevation of 0.0 probably means that the elevation of the
 		// POI is not known and should be set to the users GPS height
@@ -144,8 +182,18 @@ public abstract class LocalMarker implements Marker {
 		PhysicalPlace.convLocToVec(curGPSFix, getmGeoLoc(), locationVector);
 	}
 
-	public void calcPaint(Camera viewCam, float addX, float addY) {
-		cCMarker(origin, viewCam, addX, addY);
+	/**
+	 * A must call function to rotate marker to the current position,
+	 * which provide the smooth aumented view.
+	 * <b>LocalMarkers sub-classes:</b> Don't need to call this method,
+	 * this method is being called by view before calling {@link #draw(PaintScreen)}
+	 * 
+	 * If the caller activity froze the view, this function will not be called.
+	 * <b>Overriding this method is not allowed</b>
+	 * 
+	 */
+	final public void calcPaint(Camera viewCam, float addX, float addY) {
+		cCMarker(new MixVector(0,0,0), viewCam, addX, addY);
 		calcV();
 	}
 
@@ -153,6 +201,15 @@ public abstract class LocalMarker implements Marker {
 //		cCMarker(origin, viewCam, 0, 0);
 //	}
 
+	/**
+	 * Checks if click event is within marker's bounderies
+	 * 
+	 * TODO adapt the following to the variable radius!
+	 * TODO LocalMarker#isClickValid lower computing overhead
+	 * @param x float x clicked position
+	 * @param y float y clicked position
+	 * @return boolean true if clicked, false otherwise
+	 */
 	private boolean isClickValid(float x, float y) {
 		
 		//if the marker is not active (i.e. not shown in AR view) we don't have to check it for clicks
@@ -160,32 +217,47 @@ public abstract class LocalMarker implements Marker {
 			return false;
 
 		final float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
-				signMarker.x, signMarker.y);
+				getSignMarker().x, getSignMarker().y);
 		//TODO adapt the following to the variable radius!
-		pPt.x = x - signMarker.x;
-		pPt.y = y - signMarker.y;
-		pPt.rotate((float) Math.toRadians(-(currentAngle + 90)));
-		pPt.x += txtLab.getX();
-		pPt.y += txtLab.getY();
+		final ScreenLine screenBounderies = new ScreenLine();
+		screenBounderies.x = x - getSignMarker().x;
+		screenBounderies.y = y - getSignMarker().y;
+		screenBounderies.rotate((float) Math.toRadians(-(currentAngle + 90)));
+		screenBounderies.x += txtLab.getX();
+		screenBounderies.y += txtLab.getY();
 
 		final float objX = txtLab.getX() - txtLab.getWidth() / 2;
 		float objY = txtLab.getY() - txtLab.getHeight() / 2;
 		float objW = txtLab.getWidth();
 		float objH = txtLab.getHeight();
 
-		if (pPt.x > objX && pPt.x < objX + objW && pPt.y > objY
-				&& pPt.y < objY + objH) {
+		//TODO LocalMarker#isClickValid lower computing overhead
+		if (screenBounderies.x > objX && screenBounderies.x < objX + objW && screenBounderies.y > objY
+				&& screenBounderies.y < objY + objH) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public void draw(PaintScreen dw) {
-		drawCircle(dw);
-		drawTextBlock(dw);
-	}
+	/**
+	 * Local marker specific drawing instruction.
+	 * <b>LocalMarkers Sub-classes Must call this to be drawn</b>
+	 * default implementation, for example, is drawing "object"/"circle" and 
+	 * text block
+	 * @param dw PaintScreen to be drawn into
+	 */
+	abstract public void draw(PaintScreen dw);
+//	{
+//		drawCircle(dw);
+//		drawTextBlock(dw);
+//	}
 
+	/**
+	 * @deprecated please use your custom drawing
+	 * @param dw PaintScreen
+	 * @see #draw(PaintScreen)
+	 */
 	public void drawCircle(PaintScreen dw) {
 
 		if (isVisible) {
@@ -205,6 +277,11 @@ public abstract class LocalMarker implements Marker {
 		}
 	}
 
+	/**
+	 * @deprecated Please use your custom drawing
+	 * @param dw PaintScreen
+	 * @see #draw(PaintScreen)
+	 */
 	public void drawTextBlock(PaintScreen dw) {
 		//TODO: grandezza cerchi e trasparenza
 		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
@@ -229,14 +306,14 @@ public abstract class LocalMarker implements Marker {
 
 			//dw.setColor(DataSource.getColor(type));
 
-			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, signMarker.x, signMarker.y);
+			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, getSignMarker().x, getSignMarker().y);
 
 			txtLab.prepare(textBlock);
 
 			dw.setStrokeWidth(1f);
 			dw.setFill(true);
-			dw.paintObj(txtLab, signMarker.x - txtLab.getWidth()
-					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
+			dw.paintObj(txtLab, getSignMarker().x - txtLab.getWidth()
+					/ 2, getSignMarker().y + maxHeight, currentAngle + 90, 1);
 		}
 
 	}
@@ -399,5 +476,21 @@ public abstract class LocalMarker implements Marker {
 	 */
 	protected void setmGeoLoc(PhysicalPlace mGeoLoc) {
 		this.mGeoLoc = mGeoLoc;
+	}
+
+
+	/**
+	 * @return the signMarker
+	 */
+	protected MixVector getSignMarker() {
+		return signMarker;
+	}
+
+
+	/**
+	 * @param signMarker the signMarker to set
+	 */
+	protected void setSignMarker(MixVector signMarker) {
+		this.signMarker = signMarker;
 	}
 }

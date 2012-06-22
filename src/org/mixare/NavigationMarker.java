@@ -64,7 +64,7 @@ public class NavigationMarker extends LocalMarker {
 	
 	public void drawArrow(PaintScreen dw) {
 		if (isVisible) {
-			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, signMarker.x, signMarker.y);
+			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, getSignMarker().x, getSignMarker().y);
 			float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 
 			//dw.setColor(DataSource.getColor(type));

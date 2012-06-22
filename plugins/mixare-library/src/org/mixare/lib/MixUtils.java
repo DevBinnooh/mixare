@@ -43,16 +43,36 @@ public class MixUtils {
 	
 	/**
 	 * Helper method that shorten title and format string to display distance
-	 * @param String title
-	 * @param double distance
-	 * @return String formated Title representation
+	 * @param title String 
+	 * @param distance double 
+	 * @return formated Title String representation
+	 * @see #shortenTitle(String, double, int)
 	 */
-	public static synchronized String shortenTitle( String title, final double distance){
+	public static  String shortenTitle( String title, final double distance){
 		if (title.length() > 10) {
 			title = title.substring(0, 10) + "...";
 		}
 		
 			return  String.valueOf(title + formatDist((float) distance));
+	}
+	
+	/**
+	 * Helper method that shorten title to "titleLength" and post Mixare title format
+	 * @param title String
+	 * @param distance double 
+	 * @param titleLength int
+	 * @returnString formated Title representation 
+	 */
+	public static synchronized String shortenTitle (String title, final double distance, int titleLength){
+		if (title.isEmpty() || titleLength < 0){
+			return shortenTitle(title, distance);
+		}else{
+			if (title.length() > titleLength){
+				title = title.substring(0, titleLength);
+			}
+			
+			return String.valueOf(title + formatDist((float) distance));
+		}
 	}
 	static String formatDec(float val, int dec) {
 		int factor = (int) Math.pow(10, dec);

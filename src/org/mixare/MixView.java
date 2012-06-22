@@ -510,6 +510,7 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 	
 	/**
 	 * Refreshes Viewed Data.
+	 * TODO Move {@link MixView#refresh() refresh} functionality to MixContext 
 	 */
 	public void refresh(){
 		dataView.refresh();
@@ -801,6 +802,9 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 			//repaint after zoom level changed.
 			repaint();
 			setZoomLevel();
+			getDataView().doStart();
+			getDataView().clearEvents();
+			getMixViewData().getMixContext().getDataSourceManager().refreshDataSources();
 			refreshDownload();
 			
 		}

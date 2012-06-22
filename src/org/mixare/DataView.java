@@ -457,7 +457,7 @@ public class DataView {
 		}
 	}
 
-	boolean handleClickEvent(ClickEvent evt) {
+	private boolean handleClickEvent(ClickEvent evt) {
 		boolean evtHandled = false;
 
 		// Handle event
@@ -491,24 +491,39 @@ public class DataView {
 				false);
 	}
 
+	/**
+	 * Handles click event
+	 * @param x float 
+	 * @param y float
+	 */
 	public void clickEvent(float x, float y) {
 		synchronized (uiEvents) {
 			uiEvents.add(new ClickEvent(x, y));
 		}
 	}
 
+	/**
+	 * Handles Key pressed event
+	 * @param keyCode int
+	 */
 	public void keyEvent(int keyCode) {
 		synchronized (uiEvents) {
 			uiEvents.add(new KeyEvent(keyCode));
 		}
 	}
 
+	/**
+	 * Clears events in queue 
+	 */
 	public void clearEvents() {
 		synchronized (uiEvents) {
 			uiEvents.clear();
 		}
 	}
 
+	/**
+	 * Cancels Refresh timer
+	 */
 	public void cancelRefreshTimer() {
 		if (refreshTimer != null) {
 			refreshTimer.cancel();

@@ -232,7 +232,6 @@ public class RemoteMarker implements Marker{
 		}
 	}
 
-	@Override
 	public void setID(String iD) {
 		try {
 			iMarkerService.setID(markerName, iD);

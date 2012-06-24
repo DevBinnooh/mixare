@@ -31,6 +31,17 @@ public class MainActivity extends Activity {
 	private final String usePluginsPrefs = "mixareUsePluginsPrefs";
 	private final String usePluginsKey = "usePlugins";
 	
+	/**
+	 * Main Launcher Activity method
+	 * It checks if there are plugins installed,
+	 * if there are once, it prompt user for
+	 * running them or not.
+	 * if there is none, it launches MixView
+	 * <br/>
+	 * {@inheritDoc}
+	 * @see org.mixare.MixView
+	 * @see org.mixare.PluginLoaderActivity
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,9 +60,10 @@ public class MainActivity extends Activity {
 	}	
 
 	/**
-	 * Shows a dialog
+	 * Shows a dialog of whether to run plugin (and remember setting)
+	 * or not.
 	 */
-	public void showDialog() {
+	private void showDialog() {
 		final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
 		dialog.setTitle(R.string.launch_plugins);
@@ -81,6 +93,7 @@ public class MainActivity extends Activity {
 
 		dialog.show();
 	}
+	
 	
 	private boolean isDecisionRemembered(){
 		SharedPreferences sharedPreferences = getSharedPreferences(usePluginsPrefs, MODE_PRIVATE);

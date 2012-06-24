@@ -437,6 +437,8 @@ public abstract class LocalMarker implements Marker {
 	 */
 	@Override
 	public boolean equals (Object marker) {
+		if((marker == null) || (marker.getClass() != this.getClass()))
+			return false;
 		return this.ID.equals(((Marker) marker).getID());
 	}
 	

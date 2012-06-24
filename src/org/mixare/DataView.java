@@ -472,6 +472,7 @@ public class DataView {
 				evtHandled = pm.fClick(evt.x, evt.y, mixContext, state);
 			}
 		}
+		//TODO DataView#handleClickEvent - markers' override variable evtHandled !!! Better approach is needed
 		return evtHandled;
 	}
 

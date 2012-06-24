@@ -59,7 +59,8 @@ public interface Marker extends Comparable<Marker>{
 
 	String getID();
 
-	void setID(String iD);
+	//this is protected method that only marker's allowed to set
+	//void setID(String iD);
 
 	boolean isActive();
 

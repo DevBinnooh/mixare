@@ -99,7 +99,7 @@ public abstract class LocalMarker implements Marker {
 	/**
 	 * LocalMarker - Constructor
 	 * Sub-Classes <b>need to call this constructor</b>
-	 * @param id String marker's id (will be reset to id+type+title) {@link #getID() use for reference}
+	 * @param id String marker's id (will be reset to id+type+title) {@link #hashCode() use for reference}
 	 * @param title String marker's title
 	 * @param latitude double marker's latitude
 	 * @param longitude double marker's longitude
@@ -318,6 +318,12 @@ public abstract class LocalMarker implements Marker {
 
 	}
 
+	/**
+	 * Handles Marker's click event.
+	 * if Click was made within marker's boundaries, then click event is registered 
+	 * to current view state.
+	 * @return boolean true if matches boundaries, false otherwise 
+	 */
 	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
 		boolean evtHandled = false;
 
@@ -329,47 +335,93 @@ public abstract class LocalMarker implements Marker {
 
 	/* ****** Getters / setters **********/
 	
+	/**
+	 * Returns registered title (Marker title)
+	 * @return String Marker's title
+	 */
 	public String getTitle(){
 		return title;
 	}
 
+	/**
+	 * Returns Marker's link url
+	 * @return String Marker's URL
+	 */
 	public String getURL(){
 		return URL;
 	}
 
+	/**
+	 * Returns Marker's Latitude
+	 * @return double Marker's Latitude
+	 */
 	public double getLatitude() {
 		return getmGeoLoc().getLatitude();
 	}
 
+	/**
+	 * Returns Marker's Longitude
+	 * @return double Marker's Longitude
+	 */
 	public double getLongitude() {
 		return getmGeoLoc().getLongitude();
 	}
 
+	/**
+	 * Returns Marker's Altitude
+	 * @return double Altitude
+	 */
 	public double getAltitude() {
 		return getmGeoLoc().getAltitude();
 	}
 
+	/**
+	 * Returns vector of user's location (and point of View)
+	 * in term of x,y,z 
+	 * @return MixVector location vector
+	 */
 	public MixVector getLocationVector() {
 		return locationVector;
 	}
 	
+	/**
+	 * Get computed distance between user and marker
+	 * @return double distance
+	 */
 	public double getDistance() {
 		return distance;
 	}
 
+	/**
+	 * Sets the distance between user and marker
+	 * (In KM)
+	 * @param distance double
+	 */
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
 
-
+	/**
+	 * Marker's id 
+	 * @return String marker's id
+	 */
 	public String getID() {
 		return ID;
 	}
-
-	public void setID(String iD) {
+	
+	/**
+	 * Protected method that set's marker's id
+	 * @param iD String
+	 */
+	protected void setID(String iD) {
 		ID = iD;
 	}
 
+	/**
+	 * Public method that compare the distance between markers.
+	 * Comparsion is done in double, return in int
+	 * @return int difference between marker's distance
+	 */
 	public int compareTo(Marker another) {
 
 		Marker leftPm = this;
@@ -379,49 +431,87 @@ public abstract class LocalMarker implements Marker {
 
 	}
 
+	/**
+	 * Checks if marker's are the same
+	 * @return boolean true if marker's the same, false otherwise
+	 */
 	@Override
 	public boolean equals (Object marker) {
 		return this.ID.equals(((Marker) marker).getID());
 	}
 	
+	/**
+	 * Marker's id hashcode
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
 		return this.ID.hashCode();
 	}
 
+	/**
+	 * Returns true if marker was enabled, false otherwise
+	 * @return boolean
+	 */
 	public boolean isActive() {
 		return active;
 	}
 
+	/**
+	 * Set's Marker to be enabled
+	 * @param active boolean
+	 */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	/**
+	 * Marker's Maximum displayed objects
+	 */
 	abstract public int getMaxObjects();
 	
-	//abstract maybe!!
-	public void setImage(Bitmap image){
+	/**
+	 * @deprecated Local Marker's set their own drawings
+	 * @param image Bitmap
+	 */
+	protected void setImage(Bitmap image){
 	}
-	//Abstract!!
-	public Bitmap getImage(){
+	
+	/**
+	 * @deprecated Local Marker's should handle their own drawing
+	 * @return null
+	 */
+	protected Bitmap getImage(){
 		return null;
 	}
 
-	//get Colour for OpenStreetMap based on the URL number
+	/**
+	 * Returns int color representation {@link android.graphics.Color#Color() android Colors}
+	 * @return int color
+	 */
 	public int getColour() {
 		return colour;
 	}
 
+	/**
+	 * Set's text label of marker
+	 * @param txtLab marker's text label
+	 */
 	@Override
 	public void setTxtLab(Label txtLab) {
 		this.txtLab = txtLab;
 	}
 
+	/**
+	 * Get's marker label
+	 * @return Label
+	 */
 	@Override
 	public Label getTxtLab() {
 		return txtLab;
 	}
 	
+	//why not setExtras?
 	public void setExtras(String name, PrimitiveProperty primitiveProperty){
 		//nothing to add
 	}
@@ -432,7 +522,7 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @param String the title to set
+	 * @param title String to set
 	 */
 	protected void setTitle(String title) {
 		this.title = title;
@@ -440,7 +530,7 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @return the underline
+	 * @return boolean the underline
 	 */
 	protected boolean isUnderline() {
 		return underline;
@@ -448,7 +538,7 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @param boolean the underline to set
+	 * @param underline to set (boolean)
 	 */
 	protected void setUnderline(boolean underline) {
 		this.underline = underline;
@@ -456,7 +546,7 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @param String the uRL to set
+	 * @param the uRL to set
 	 */
 	protected void setURL(String uRL) {
 		URL = uRL;
@@ -472,7 +562,8 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @param PhysicalPlace the mGeoLoc to set
+	 * @see PhysicalPlace
+	 * @param the mGeoLoc to set (PhysicalPlace)
 	 */
 	protected void setmGeoLoc(PhysicalPlace mGeoLoc) {
 		this.mGeoLoc = mGeoLoc;

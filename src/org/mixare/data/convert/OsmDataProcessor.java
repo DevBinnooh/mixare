@@ -26,7 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.JSONException;
-import org.mixare.MixView;
+import org.mixare.MixContext;
 import org.mixare.NavigationMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -91,7 +91,7 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 						double lon = Double.valueOf(att.getNamedItem("lon")
 								.getNodeValue());
 
-						Log.v(MixView.TAG, "OSM Node: " + name + " lat " + lat
+						Log.v(MixContext.TAG, "OSM Node: " + name + " lat " + lat
 								+ " lon " + lon + "\n");
 
 						Marker ma = new NavigationMarker(

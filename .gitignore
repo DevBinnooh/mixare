@@ -3,3 +3,4 @@
 /.sonar
 /.settings
 sonar-project.properties
+/docs/javadoc.xml

@@ -90,7 +90,8 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 	//----------
     private MixViewDataHolder mixViewData  ;
 	
-	/** TAG for logging */
+	/** @deprecated please use {@link org.mixare.MixContext#TAG} 
+	 * TAG for logging */
 	public static final String TAG = "Mixare";
 
 	// why use Memory to save a state? MixContext? activity lifecycle?
@@ -229,7 +230,7 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 		// changed)
 		try {
 			if (data.getBooleanExtra("RefreshScreen", false)) {
-				Log.d(TAG + " WorkFlow",
+				Log.d(MixContext.TAG + " WorkFlow",
 						"MixView - Received Refresh Screen Request .. about to refresh");
 				repaint();
 				setZoomLevel();
@@ -433,7 +434,7 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 		} catch (Throwable e) {
 			//finalize error. (this function does nothing but call native API and release 
 			//any synchronization-locked messages and threads deadlocks.
-			Log.e(TAG, e.getMessage());
+			Log.e(MixContext.TAG, e.getMessage());
 		}finally{
 			super.onDestroy();
 		}

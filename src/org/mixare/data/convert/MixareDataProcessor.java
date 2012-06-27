@@ -24,7 +24,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixView;
+import org.mixare.MixContext;
 import org.mixare.POIMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.HtmlUnescape;
@@ -75,7 +75,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				if(jo.has("id"))
 						id = jo.getString("id");
 				
-				Log.v(MixView.TAG, "processing Mixare JSON object");
+				Log.v(MixContext.TAG, "processing Mixare JSON object");
 				String link=null;
 		
 				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage"))

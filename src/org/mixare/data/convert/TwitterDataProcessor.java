@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixView;
+import org.mixare.MixContext;
 import org.mixare.SocialMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -100,7 +100,7 @@ public class TwitterDataProcessor extends DataHandler implements DataProcessor{
 					}
 				}
 				if (lat != null) {
-					Log.v(MixView.TAG, "processing Twitter JSON object");
+					Log.v(MixContext.TAG, "processing Twitter JSON object");
 					String user=jo.getString("from_user");
 					String url="http://twitter.com/"+user;
 					

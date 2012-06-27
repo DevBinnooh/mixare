@@ -37,15 +37,21 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 
 /**
- * Cares about location management and about the data (source, inputstream)
+ * MixView Context wrapper that provide access to {@link DownloadManager downloadManager}, 
+ * {@link LocationFinder LocationFinder}, {@link DataSourceManager DataSourceManager}, 
+ * {@link WebContentManager WebContentManager}, {@link NotificationManager NotificationManager}
+ * and Application context
+ * 
+ * 
  */
 public class MixContext extends ContextWrapper implements MixContextInterface {
 
-	// TAG for logging
+	/** TAG for logging */
 	public static final String TAG = "Mixare";
 
 	private MixView mixView;
-
+	
+	/* TODO MixContext#rotationM move to DataView or AugView*/
 	private Matrix rotationM = new Matrix();
 
 	/** Responsible for all download */
@@ -63,11 +69,16 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	/** Responsible for Notification logging */
 	private NotificationManager notificationManager;
 
+	/**
+	 * Constructor - currently only accepts MixView activity.
+	 * Future plans - allow (Activity appCtx)
+	 * 
+	 * @param appCtx MixView instance
+	 */
 	public MixContext(MixView appCtx) {
 		super(appCtx);
 		mixView = appCtx;
 
-		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
 
 		if (!getDataSourceManager().isAtLeastOneDatasourceSelected()) {
@@ -77,6 +88,10 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		getLocationFinder().findLocation();
 	}
 
+	/**
+	 * Returns intent's data
+	 * @return intentData or empty string
+	 */
 	public String getStartUrl() {
 		Intent intent = ((Activity) getActualMixView()).getIntent();
 		if (intent.getAction() != null
@@ -87,6 +102,11 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		}
 	}
 
+	/**
+	 * synchronized rotation setter!
+	 * TODO {@link MixContext#getRM(Matrix) Validate method}
+	 * @param dest
+	 */
 	public void getRM(Matrix dest) {
 		synchronized (rotationM) {
 			dest.set(rotationM);
@@ -95,22 +115,41 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
 	/**
 	 * Shows a webpage with the given url when clicked on a marker.
+	 * 
+	 * @param url String url link
 	 */
 	public void loadMixViewWebPage(String url) throws Exception {
 		// TODO: CHECK INTERFACE METHOD
 		getWebContentManager().loadWebPage(url, getActualMixView());
 	}
 
+	/**
+	 * Keep context view consistent with current view -
+	 * It sets MixView.
+	 * 
+	 * @param mixView
+	 */
 	public void doResume(MixView mixView) {
 		setActualMixView(mixView);
 	}
 
+	/**
+	 * synchronized method to smooth rotation View.
+	 * TODO {@link MixContext#updateSmoothRotation(Matrix) validate method}
+	 * 
+	 * @param smoothR
+	 */
 	public void updateSmoothRotation(Matrix smoothR) {
 		synchronized (rotationM) {
 			rotationM.set(smoothR);
 		}
 	}
 
+	/**
+	 * Returns {@link DataSourceManager DataSourceManager}.
+	 * 
+	 * @return dataSourceManager
+	 */
 	public DataSourceManager getDataSourceManager() {
 		if (this.dataSourceManager == null) {
 			dataSourceManager = DataSourceManagerFactory
@@ -119,6 +158,11 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return dataSourceManager;
 	}
 
+	/**
+	 * Returns {@link LocationFinder LocationFinder}.
+	 * 
+	 * @return locationFinder
+	 */
 	public LocationFinder getLocationFinder() {
 		if (this.locationFinder == null) {
 			locationFinder = LocationFinderFactory.makeLocationFinder(this);
@@ -126,6 +170,11 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return locationFinder;
 	}
 
+	/**
+	 * Returns {@link DownLoadManager DownloadManager}.
+	 * 
+	 * @return downloadMng
+	 */
 	public DownloadManager getDownloadManager() {
 		if (this.downloadManager == null) {
 			downloadManager = DownloadManagerFactory.makeDownloadManager(this);
@@ -134,6 +183,11 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return downloadManager;
 	}
 
+	/**
+	 * Returns {@link WebContentManager WebContentManager}.
+	 * 
+	 * @return webContntMng
+	 */
 	public WebContentManager getWebContentManager() {
 		if (this.webContentManager == null) {
 			webContentManager = WebContentManagerFactory
@@ -142,6 +196,11 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return webContentManager;
 	}
 
+	/**
+	 * Returns {@link NotificationManager NotificationManager}.
+	 * 
+	 * @return notificationMng
+	 */
 	public NotificationManager getNotificationManager() {
 		if (this.notificationManager == null) {
 			notificationManager = NotificationManagerFactory
@@ -150,18 +209,30 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return notificationManager;
 	}
 	
+	/**
+	 * Returns current {@link MixView MixView}.
+	 * 
+	 * @return mixView
+	 */
 	public MixView getActualMixView() {
 		synchronized (mixView) {
 			return this.mixView;
 		}
 	}
 
+	/*
+	 * Private method that sets MixView
+	 * @see MixContext#doResume(MixView mv)
+	 */
 	private void setActualMixView(MixView mv) {
 		synchronized (mixView) {
 			this.mixView = mv;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public ContentResolver getContentResolver() {
 		ContentResolver out = super.getContentResolver();
 		if (super.getContentResolver() == null) {

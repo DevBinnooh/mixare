@@ -25,23 +25,34 @@ import org.mixare.lib.render.Matrix;
 import org.mixare.lib.render.MixVector;
 
 /**
- * This class calculates the bearing and pitch out of the angles
+ * This class calculates the bearing and <strike> pitch out </strike>of the angles,
+ * it also saves the state of downloads.
  */
 public class MixState implements MixStateInterface{
 
-	public static int NOT_STARTED = 0; 
-	public static int PROCESSING = 1; 
-	public static int READY = 2; 
-	public static int DONE = 3; 
+	/** Not started state identifier */
+	public final static int NOT_STARTED = 0;
+	/** Processing state identifier */
+	public final static int PROCESSING = 1; 
+	/** Ready state identifier */
+	public final static int READY = 2;
+	/** Done state identifier */
+	public final static int DONE = 3; 
 
-	int nextLStatus = MixState.NOT_STARTED;
-	String downloadId;
+	/** Next state identifier */
+	public int nextLStatus = MixState.NOT_STARTED;
+	//String downloadId;
 
 	private float curBearing;
+	/** @deprecated not in used */
 	private float curPitch;
 
 	private boolean detailsView;
 
+	/**
+	 * Handles click events and launches web pages if its webpage event.
+	 *  
+	 */
 	public boolean handleEvent(MixContextInterface ctx, String onPress) {
 		if (onPress != null && onPress.startsWith("webpage")) {
 			try {
@@ -55,22 +66,49 @@ public class MixState implements MixStateInterface{
 		return true;
 	}
 
+	/**
+	 * Returns current bearing direction.
+	 * @return curBearing
+	 * @see #calcPitchBearing(Matrix)
+	 */
 	public float getCurBearing() {
 		return curBearing;
 	}
 
+	/**
+	 * @deprecated not in use
+	 * @return
+	 */
 	public float getCurPitch() {
 		return curPitch;
 	}
 	
+	/**
+	 * Returns detail view state
+	 * @return detailsView
+	 * @see #setDetailsView(boolean)
+	 */
 	public boolean isDetailsView() {
 		return detailsView;
 	}
 	
+	/**
+	 * Sets detail view state
+	 * @param detailsView
+	 * @see #isDetailsView()
+	 */
 	public void setDetailsView(boolean detailsView) {
 		this.detailsView = detailsView;
 	}
 
+	/**
+	 * A method that calculate bearing direction and <strike> pitch angle </strike>.
+	 * The passed matrix is 3x3 matrix that contains the current device rotation.
+	 * 
+	 * @param rotationM
+	 * @see http://en.wikipedia.org/wiki/Bearing_(navigation)
+	 * @see http://www.movable-type.co.uk/scripts/latlong.html
+	 */
 	public void calcPitchBearing(Matrix rotationM) {
 		MixVector looking = new MixVector();
 		rotationM.transpose();
@@ -78,6 +116,7 @@ public class MixState implements MixStateInterface{
 		looking.prod(rotationM);
 		this.curBearing = (int) (MixUtils.getAngle(0, 0, looking.x, looking.z)  + 360 ) % 360 ;
 
+		//The next comming lines are not in use
 		rotationM.transpose();
 		looking.set(0, 1, 0);
 		looking.prod(rotationM);

@@ -25,7 +25,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.mixare.MixContext;
-import org.mixare.MixView;
 import org.mixare.lib.marker.Marker;
 
 import android.location.Location;
@@ -49,7 +48,7 @@ public class DataHandler {
 				markerList.add(ma);
 		}
 		
-		Log.d(MixView.TAG, "Marker count: "+markerList.size());
+		Log.d(MixContext.TAG, "Marker count: "+markerList.size());
 	}
 	
 	public void sortMarkerList() {
@@ -82,7 +81,7 @@ public class DataHandler {
 		
 	public void onLocationChanged(Location location) {
 		updateDistances(location);
-		sortMarkerList();
+		//sortMarkerList(); //Memory Consuming request
 		for(Marker ma: markerList) {
 			ma.update(location);
 		}

@@ -31,17 +31,17 @@ import android.os.Parcelable;
  *  PaintScreen class to actually draw the text.
  */
 public class TextObj implements ScreenObj, Parcelable{
-	String txt;
-	float fontSize;
-	float width, height;
-	float areaWidth, areaHeight;
-	String lines[];
-	float lineWidths[];
-	float lineHeight;
-	float maxLineWidth;
-	float pad;
-	int borderColor, bgColor, textColor, textShadowColor;
-	boolean underline;
+	private String txt;
+	private float fontSize;
+	private float width, height;
+	private float areaWidth, areaHeight;
+	private String lines[];
+	private float lineWidths[];
+	private float lineHeight;
+	private float maxLineWidth;
+	private float pad;
+	private int borderColor, bgColor, textColor, textShadowColor;
+	private boolean underline;
 
 	public TextObj(String txtInit, float fontSizeInit, float maxWidth,
 			PaintScreen dw, boolean underline) {
@@ -82,7 +82,7 @@ public class TextObj implements ScreenObj, Parcelable{
 	public TextObj(Parcel in){
 		readParcel(in);
 	}
-
+	//TODO optimize prepTxt
 	private void prepTxt(String txtInit, float fontSizeInit, float maxWidth,
 			PaintScreen dw) {
 		dw.setFontSize(fontSizeInit);
@@ -151,7 +151,7 @@ public class TextObj implements ScreenObj, Parcelable{
 
 
 		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i];
+			final String line = lines[i];
 
 			// stroke
 /* 			dw.setFill(false);

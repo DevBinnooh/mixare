@@ -123,6 +123,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 	 * (non-Javadoc)
 	 */
 	public void shutDown(){
+		resetActivity();
 		executor.shutdown();
 	}
 
@@ -132,8 +133,15 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 	 * @see org.mixare.mgr.downloader.DownloadManager#purgeLists()
 	 */
 	public synchronized void resetActivity() {
+		//it's slow to clear hashmaps and queues
+		//check it there are not empty
+		//http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4343436
+		if(!todoList.isEmpty()){
 		todoList.clear();
+		}
+		if(!doneList.isEmpty()){
 		doneList.clear();
+		}
 	}
 
 	/*

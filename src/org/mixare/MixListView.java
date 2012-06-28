@@ -44,43 +44,46 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * This class holds vectors with informaction about sources, their description
- * and whether they have been selected.
+ * Class to view data in list view fashion. 
+ * It also handles viewing search results across all other activities.
  */
 public class MixListView extends ListActivity {
 
 	private Vector<SpannableString> listViewMenu;
 	private Vector<String> selectedItemURL;
+	private DataView dataView;
+	private static List<Marker> originalMarkerList;
+	
+	/* To be removed after release 0.9.5 */
 	private Vector<String> dataSourceMenu;
 	private Vector<String> dataSourceDescription;
-	private Vector<Boolean> dataSourceChecked;
-	private Vector<Integer> dataSourceIcon;
-	private DataView dataView;
+	/* End of Remove class variables */
 	
-	/*
-	private MixContext mixContext;
-	private ListItemAdapter adapter;
-	private static Context ctx;
-	*/
-	//private static String searchQuery = "";
-//	private static SpannableString underlinedTitle;
-//	public static List<Marker> searchResultMarkers;
-	public static List<Marker> originalMarkerList;
-
+	/**
+	 * @deprecated DataSourceList handles datasource management
+	 * TODO remove after release 0.9.5
+	 * @return
+	 */
 	public Vector<String> getDataSourceMenu() {
 		return dataSourceMenu;
 	}
 	
+	/**
+	 * @deprecated DataSourceList handles datasource management
+	 * TODO remove after release 0.9.5
+	 * @return
+	 */
 	public Vector<String> getDataSourceDescription() {
 		return dataSourceDescription;
 	}
 
-	public Vector<Boolean> getDataSourceChecked() {
-		return dataSourceChecked;
-	}
-	public Vector<Integer> getDataSourceIcon() {
-		return dataSourceIcon;
-	}
+	/**
+	 * First to launch method that handles listing datasources.
+	 * It also handle search intents, and display the results only.
+	 * 
+	 * TODO MixListView Accept datasources through intents, see link below
+	 * @see http://code.google.com/p/mixare/issues/detail?id=101
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -88,6 +91,8 @@ public class MixListView extends ListActivity {
 		selectedItemURL = new Vector<String>();
 		listViewMenu = new Vector<SpannableString>();
 		DataHandler jLayer = dataView.getDataHandler();
+		
+		//check if the request is for displaying search results
 		if (Intent.ACTION_SEARCH.equals(this.getIntent().getAction())){
 			String query = this.getIntent().getStringExtra(SearchManager.QUERY);
 			doMixSearch(query);
@@ -121,17 +126,29 @@ public class MixListView extends ListActivity {
 
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			//if the intent was launched from this activity
+			//the relaunch it again.
+			//Issue: if didn't call finish(), activity will be up running 
+			//with all markers. when clicking the back button, the search result
+			//listView will be launched.
 			intent.setClass(this, MixListView.class);
 			startActivity(intent);
 			finish(); //TODO reoginize launching
 		}
 	}
 
+	/**
+	 * Handles new raised intents.
+	 * Currently, search intent is supported
+	 * <br/>
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		handleIntent(intent);
 	}
+	
 
 	private void doMixSearch(String query) {
 		DataHandler jLayer = dataView.getDataHandler();
@@ -165,6 +182,11 @@ public class MixListView extends ListActivity {
 		}
 	}
 
+	/**
+	 * Handles clicking events.
+	 * <br>
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -172,7 +194,12 @@ public class MixListView extends ListActivity {
 		clickOnListView(position);
 	}
 
-	public void clickOnListView(int position){
+	
+	/**
+	 * private method implementation of event clicking.
+	 * @param position
+	 */
+	private void clickOnListView(int position){
 		/*if no website is available for this item*/
 		String selectedURL = position < selectedItemURL.size() ? selectedItemURL.get(position) : null;
 		if (selectedURL == null || selectedURL.length() <= 0){
@@ -197,6 +224,16 @@ public class MixListView extends ListActivity {
 			}
 		}
 	}
+	
+	/**
+	 * Creates a menu list view. (when menu button was clicked)
+	 * Currently, it contains
+	 * -Map View shortcut
+	 * -Camera View shortcut
+	 * 
+	 * <br>
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -211,6 +248,14 @@ public class MixListView extends ListActivity {
 
 		return true;
 	}
+	
+	/**
+	 * Handles menu clicked item.
+	 * <br>
+	 * {@inheritDoc}
+	 * @param item
+	 * @see #onCreateOptionsMenu(Menu)
+	 */
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
@@ -218,7 +263,7 @@ public class MixListView extends ListActivity {
 		/*Map View*/
 		case 1:
 			createMixMap();
-			finish();
+			//finish(); //let users return where there were at
 			break;
 			/*back to Camera View*/
 		case 2:
@@ -227,24 +272,23 @@ public class MixListView extends ListActivity {
 		}
 		return true;
 	}
+	
+	/**
+	 * Launches mapView
+	 */
 
-	public void createMixMap(){
+	private void createMixMap(){
 		Intent intent2 = new Intent(MixListView.this, MixMap.class); 
 		startActivityForResult(intent2, 20);
 	}
 
-//	public static String getSearchQuery(){
-//		return searchQuery;
-//	}
-//
-//	public static void setSearchQuery(String query){
-//		searchQuery = query;
-//	}
 }
 
 /**
  * The ListItemAdapter is can store properties of list items, like background or
  * text color
+ * @deprecated This class is not in used, operations has been moved to DataSourceList
+ * TODO Remove ListItemAdapter after public release 0.9.5 (and no issues relate to deleting it)
  */
 class ListItemAdapter extends BaseAdapter {
 

@@ -565,8 +565,9 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 	 * This method handles the Zoom level conversion between Mixare ZoomLevel and SeekBar.
 	 * 
 	 * @return int Zoom Level base 80 
+	 * @see https://groups.google.com/d/topic/mixare-development/mPQm-Kn9j3k/discussion
 	 */
-	public float calcZoomLevel(){
+	private float calcZoomLevel(){
 
 		int myZoomLevel = getMixViewData().getMyZoomBar().getProgress();
 		float myout = 5;

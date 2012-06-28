@@ -44,6 +44,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * This class holds vectors with information about sources, their description
+ * and whether they have been selected.
+ */
 public class DataSourceList extends ListActivity {
 	
 	public static final String SHARED_PREFS = "DataSourcesPrefs";

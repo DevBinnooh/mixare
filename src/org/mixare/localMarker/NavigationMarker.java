@@ -17,28 +17,30 @@
  * this program. If not, see <http://www.gnu.org/licenses/>
  */
 
-package org.mixare;
+package org.mixare.localMarker;
 
+import org.mixare.MixView;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
+import org.mixare.localMarker.LocalMarker;
 
+import android.graphics.Path;
 import android.location.Location;
 
 /**
- * The SocialMarker class represents a marker, which contains data from
- * sources like twitter etc. Social markers appear at the top of the screen
- * and show a small logo of the source.
+ * NavigationMarker is displayed as an arrow at the bottom of the screen.
+ * It indicates directions using the OpenStreetMap as type.
  * 
  * @author hannes
  *
  */
-public class SocialMarker extends LocalMarker {
+public class NavigationMarker extends LocalMarker {
 	
-	public static final int MAX_OBJECTS=15;
+	public static final int MAX_OBJECTS=10;
 
 	/**
-	 * SocialMarker constructor with the given params.
+	 * NavigationMarker constructor with the given params.
 	 * 
 	 * @param id String Marker's id
 	 * @param title String Marker's title
@@ -50,7 +52,7 @@ public class SocialMarker extends LocalMarker {
 	 * @param Color int Color representation {@link android.graphics.Color Color}
 	 * @see LocalMarker
 	 */
-	public SocialMarker(String id, String title, double latitude, double longitude,
+	public NavigationMarker(String id, String title, double latitude, double longitude,
 			double altitude, String URL, int type, int color) {
 		super(id, title, latitude, longitude, altitude, URL, type, color);
 	}
@@ -62,18 +64,15 @@ public class SocialMarker extends LocalMarker {
 	 */
 	@Override
 	public void update(Location curGPSFix) {
-
-		//0.35 radians ~= 20 degree
-		//0.85 radians ~= 45 degree
-		//minAltitude = sin(0.35)
-		//maxAltitude = sin(0.85)
-		
-		// we want the social markers to be on the upper part of
-		// your surrounding sphere 
-		double altitude = curGPSFix.getAltitude()+Math.sin(0.35)*distance+Math.sin(0.4)*(distance/(MixView.getDataView().getRadius()*1000f/distance));
-		getmGeoLoc().setAltitude(altitude);
+	
 		super.update(curGPSFix);
+		
+		// we want the navigation markers to be on the lower part of
+		// your surrounding sphere so we set the height component of 
+		// the position vector radius/2 (in meter) below the user
 
+		locationVector.y-=MixView.getDataView().getRadius()*500f;
+		//locationVector.y+=-1000;
 	}
 
 	/**
@@ -81,33 +80,43 @@ public class SocialMarker extends LocalMarker {
 	 */
 	@Override
 	public void draw(PaintScreen dw) {
-		//This is The Ghost marker
-		//drawTitle(dw);
-
+		drawArrow(dw);
+		drawTitle(dw);
+	}
+	
+	private void drawArrow(PaintScreen dw) {
 		if (isVisible) {
-			drawTitle(dw);
+			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, getSignMarker().x, getSignMarker().y);
 			float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
-			//Bitmap bitmap = BitmapFactory.decodeResource(MixContext.getResources(), DataSource.getDataSourceIcon());
-//			if(bitmap!=null) {
-//				dw.paintBitmap(bitmap, cMarker.x - maxHeight/1.5f, cMarker.y - maxHeight/1.5f);
-//			}
-//			else {
-				dw.setStrokeWidth(maxHeight / 10f);
-				dw.setFill(false);
-				//dw.setColor(DataSource.getColor(type));
-				dw.paintCircle(cMarker.x, cMarker.y, maxHeight / 1.5f);
-			//}
+
+			//dw.setColor(DataSource.getColor(type));
+			dw.setStrokeWidth(maxHeight / 10f);
+			dw.setFill(false);
+			
+			Path arrow = new Path();
+			float radius = maxHeight / 1.5f;
+			float x=0;
+			float y=0;
+			arrow.moveTo(x-radius/3, y+radius);
+			arrow.lineTo(x+radius/3, y+radius);
+			arrow.lineTo(x+radius/3, y);
+			arrow.lineTo(x+radius, y);
+			arrow.lineTo(x, y-radius);
+			arrow.lineTo(x-radius, y);
+			arrow.lineTo(x-radius/3,y);
+			arrow.close();
+			dw.paintPath(arrow,cMarker.x,cMarker.y,radius*2,radius*2,currentAngle+90,1);			
 		}
 	}
-
+	
 	/**
-	 * Draw a title for SocialMarker. It displays full title if title's length is less
+	 * Draw a title for NavigationMarker. It displays full title if title's length is less
 	 * than <b>20</b> chars, otherwise, it displays the first 20 chars and concatenate
 	 * three dots "..."
 	 * 
 	 * @param dw PaintScreen View Screen that title screen will be drawn into
 	 */
-	private void drawTitle(final PaintScreen dw) {
+	private void drawTitle(PaintScreen dw) {
 		if (isVisible) {
 			final float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 			String textStr = MixUtils.shortenTitle(title,distance,20);
@@ -123,8 +132,7 @@ public class SocialMarker extends LocalMarker {
 					getSignMarker().y + maxHeight, currentAngle + 90, 1);
 		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -132,6 +140,5 @@ public class SocialMarker extends LocalMarker {
 	public int getMaxObjects() {
 		return MAX_OBJECTS;
 	}
-
 	
 }

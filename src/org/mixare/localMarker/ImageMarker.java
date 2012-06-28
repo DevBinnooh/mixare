@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along with 
  * this program. If not, see <http://www.gnu.org/licenses/>
  */
-package org.mixare;
+package org.mixare.localMarker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,7 +36,7 @@ import android.util.Log;
 
 /**
  * Local Image Marker that handles drawing images locally 
- * (extents {@link org.mixare.LocalMarker LocalMarker})
+ * (extents {@link org.mixare.localMarker.LocalMarker LocalMarker})
  * 
  * Note: LinkURL is the url when marker is clicked on.
  * Note: ImageURL is the url that links to solid image.
@@ -54,10 +54,10 @@ public class ImageMarker extends LocalMarker {
 	/**
 	 * Constructor with the given params.
 	 * Note Image will be set to default (empty square).
-	 * Please Set the image {@link org.mixare.ImageMarker#setImage(Bitmap)},
+	 * Please Set the image {@link org.mixare.localMarker.ImageMarker#setImage(Bitmap)},
 	 * or Call this class with Image URL.
 	 * 
-	 * @see org.mixare.ImageMarker#ImageMarker(String, String, double, double, double, String, int, int, String, String)
+	 * @see org.mixare.localMarker.ImageMarker#ImageMarker(String, String, double, double, double, String, int, int, String, String)
 	 * @param id String Marker's id
 	 * @param title String Marker's title
 	 * @param latitude double latitude

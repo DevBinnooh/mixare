@@ -31,11 +31,12 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.ImageMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
 import org.mixare.lib.HtmlUnescape;
 import org.mixare.lib.marker.Marker;
+import org.mixare.localMarker.ImageMarker;
+
 import android.util.Log;
 
 /**

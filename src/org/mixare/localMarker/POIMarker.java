@@ -17,14 +17,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>
  */
 
-package org.mixare;
+package org.mixare.localMarker;
 
 import java.text.DecimalFormat;
 
-import org.mixare.LocalMarker;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
+import org.mixare.localMarker.LocalMarker;
 
 import android.graphics.Color;
 import android.graphics.Path;

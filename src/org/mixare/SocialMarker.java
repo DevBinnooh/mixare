@@ -37,11 +37,29 @@ public class SocialMarker extends LocalMarker {
 	
 	public static final int MAX_OBJECTS=15;
 
+	/**
+	 * SocialMarker constructor with the given params.
+	 * 
+	 * @param id String Marker's id
+	 * @param title String Marker's title
+	 * @param latitude double latitude
+	 * @param longitude double longitude
+	 * @param altitude double altitude
+	 * @param url String link when clicked
+	 * @param type int Datasource type
+	 * @param Color int Color representation {@link android.graphics.Color Color}
+	 * @see LocalMarker
+	 */
 	public SocialMarker(String id, String title, double latitude, double longitude,
 			double altitude, String URL, int type, int color) {
 		super(id, title, latitude, longitude, altitude, URL, type, color);
 	}
 
+	/**
+	 * Updates NavigationMarker location
+	 * <br>
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void update(Location curGPSFix) {
 
@@ -58,6 +76,9 @@ public class SocialMarker extends LocalMarker {
 
 	}
 
+	/**
+	 * Draw specification of Navigation Marker
+	 */
 	@Override
 	public void draw(PaintScreen dw) {
 		//This is The Ghost marker
@@ -81,12 +102,12 @@ public class SocialMarker extends LocalMarker {
 
 	/**
 	 * Draw a title for SocialMarker. It displays full title if title's length is less
-	 * than <b>20</b> chars, otherwise, it displays the first 10 chars and concatenate
+	 * than <b>20</b> chars, otherwise, it displays the first 20 chars and concatenate
 	 * three dots "..."
 	 * 
 	 * @param dw PaintScreen View Screen that title screen will be drawn into
 	 */
-	public void drawTitle(final PaintScreen dw) {
+	private void drawTitle(final PaintScreen dw) {
 		if (isVisible) {
 			final float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 			String textStr = MixUtils.shortenTitle(title,distance,20);
@@ -102,6 +123,11 @@ public class SocialMarker extends LocalMarker {
 					getSignMarker().y + maxHeight, currentAngle + 90, 1);
 		}
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getMaxObjects() {
 		return MAX_OBJECTS;

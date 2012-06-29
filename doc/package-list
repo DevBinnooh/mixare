@@ -8,6 +8,7 @@ org.mixare.lib.marker
 org.mixare.lib.marker.draw
 org.mixare.lib.reality
 org.mixare.lib.render
+org.mixare.localMarker
 org.mixare.mgr
 org.mixare.mgr.datasource
 org.mixare.mgr.downloader
